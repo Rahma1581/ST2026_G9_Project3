@@ -30,13 +30,23 @@ private:
     int severity;
 
 public:
-    EmergencyCase(int pid, int s);
+    EmergencyCase(int pid, int s){
+        patientId = pid;
+        severity = s;
+    };
+    
 
-    int getPatientId() const;
-    int getSeverity() const;
+    int getPatientId() const{
+        return patientId;
+    };
+    int getSeverity() const{
+        return severity;
+    };
 
     // Higher severity = higher priority
-    bool operator<(const EmergencyCase& other) const;
+    bool operator<(const EmergencyCase& other) const{
+        return severity < other.severity;
+    };
 };
 
 
@@ -114,28 +124,94 @@ private:
 
 public:
     // Constructor
-    Doctor(int did, string n, Department d);
+    Doctor(int did, string n, Department d){
+        id = did;
+        name = n;
+        department = d;
+    };
 
     // ========== ORIGINAL FEATURES ========== //
 
-    void addAppointment(int patientId);
-    int seePatient();
+    void addAppointment(int patientId){
+        appointmentQueue.push(patientId);
+    };
 
-    int getId();
-    string getName();
-    string getDepartment();
+    int seePatient(){
+        if(appointmentQueue.empty()){
+            return -1;
+        }
+        int nextPatient = appointmentQueue.front();
+        appointmentQueue.pop();
+        return nextPatient;
+    };
+
+    int getId(){
+        return id;
+    };
+    string getName(){
+        return name;
+    };
+    string getDepartment(){
+        switch(department){
+            case CARDIOLOGY: return "Cardiology";
+            case NEUROLOGY: return "Neurology";
+            case ORTHOPEDICS: return "Orthopedics";
+            case PEDIATRICS: return "Pediatrics";
+            case EMERGENCY: return "Emergency";
+            case GENERAL: return "General";
+            default: return "Unknown";
+        }
+    };
 
 
     // ========== NEW FEATURES ========== //
 
     // Display waiting patients
-    void displayAppointments();
+    void displayAppointments(){
+        if(appointmentQueue.empty()){
+            cout << "No appointments scheduled." << endl;
+            return;
+        }
+
+        cout << "Appointment Queue : " << endl;
+        queue<int> temp= appointmentQueue;
+        while(!temp.empty()){
+            cout<<"Patient ID: "<< temp.front()<<endl;
+               temp.pop();
+     }
+    };
 
     // Cancel appointment
-    void cancelAppointment(int patientId);
+    void cancelAppointment(int patientId){
+        if(appointmentQueue.empty()){
+            cout<< "No appointments available." <<endl;
+           return;
+        }
+        queue<int> temp;
+        bool found = false;
+        while(!appointmentQueue.empty()){
+            int current = appointmentQueue.front();
+            appointmentQueue.pop();
+             
+            if(current == patientId && !found){
+                found = true;
+            } else{
+                temp.push(current);
+            }
+        }
+
+        appointmentQueue = temp;
+        if(found){
+            cout<< "Appointment cancelled successfully."<< endl;
+        }else{
+            cout<< "Appointment not found."<<endl;
+        }
+    };
 
     // Number of waiting patients
-    int getAppointmentCount();
+    int getAppointmentCount(){
+        return appointmentQueue.size();
+    };
 };
 
 
