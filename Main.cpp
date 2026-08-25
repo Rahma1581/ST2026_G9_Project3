@@ -71,24 +71,54 @@ private:
 
 public:
     // Constructor
-    Patient(int pid, string n, int a, string c);
+    Patient(int pid, string n, int a, string c){
+        id = pid;
+        name =n;
+        age = a;
+        contact = c ;
+    };
 
     // ========== ORIGINAL FEATURES ========== //
 
-    void admitPatient(RoomType type);
-    void dischargePatient();
+    void admitPatient(RoomType type){
+        if(isAdmitted){
+            cout<< "patient" <<name<<"is already admitted"<<endl;
+            return;
+        }
+        isAdmitted = true;
+        roomType = type;
+          cout<< "patient" <<name<<" admitted to room type "<< type <<endl;
 
-    void addMedicalRecord(string record);
+    };
+    void dischargePatient(){
+    if (!isAdmitted) {
+        cout << "Patient " << name << " is not admitted."<<endl;
+        return;
+    }
+    isAdmitted = false;
+    cout << "Patient " << name << " discharged."<<endl;
+};
+
+    void addMedicalRecord(string record){
+        medicalHistory.push(record);
+        cout << "Medical record added for " << name << endl;
+    };
 
     void requestTest(string testName);
     string performTest();
 
     void displayHistory();
 
-    int getId();
-    string getName();
+    int getId(){
+        return id;
+    };
+    string getName(){
+        return name;
+    };
 
-    bool getAdmissionStatus();
+    bool getAdmissionStatus(){
+        return isAdmitted;
+    };
 
 
     // ========== NEW FEATURES ========== //
@@ -101,14 +131,28 @@ public:
     void displayPrescriptions();
 
     // Billing
-    void addBill(double amount);
-    double getBill();
-    void displayBill();
+    void addBill(double amount){
+          bill += amount;
+    cout << "Added bill of " << amount << " for " << name << ". Total: " << bill << endl;
+
+    };
+    double getBill(){
+        return bill;
+    };
+    void displayBill(){
+        cout << "Total bill for " << name << ": " << bill <<endl; 
+    };
 
     // Additional Getters
-    int getAge();
-    string getContact();
-    RoomType getRoomType();
+    int getAge(){
+        return age;
+    };
+    string getContact(){
+        return contact;
+    };
+    RoomType getRoomType(){
+        return roomType;
+    };
 };
 
 
