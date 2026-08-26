@@ -638,8 +638,128 @@ public:
 	// Hospital Statistics
 	// ===================================================== //
 
-	void displayStatistics();
-};
+Nada Sobhy Sobhy:
+// =====================================================
+// EMERGENCY MANAGEMENT (SRS Section 6.5)
+// =====================================================
+
+// ---- Standard FIFO Emergency ----
+void Hospital::addEmergency(int patientId) {
+emergencyQueue.push(patientId);
+}
+
+int Hospital::handleEmergency() {
+if (emergencyQueue.empty()) {
+cout << "No emergencies in queue." << endl;
+return -1;
+}
+int patientId = emergencyQueue.front();
+emergencyQueue.pop();
+cout << "Handled emergency for patient: " << patientId << endl;
+return patientId;
+}
+
+// ---- NEW FEATURE 11: Priority Emergency ----
+void Hospital::addPriorityEmergency(int patientId, int severity) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient with ID " << patientId << " not found." << endl;
+return;
+}
+if (severity < 1 || severity > 5) {
+cout << "Invalid severity level. Must be between 1 and 5." << endl;
+return;
+}
+priorityEmergencyQueue.push(EmergencyCase(patientId, severity));
+cout << "Emergency added with severity " << severity << endl;
+}
+
+// ---- NEW FEATURE 12: Handle Priority Emergency ----
+int Hospital::handlePriorityEmergency() {
+if (priorityEmergencyQueue.empty()) {
+cout << "No priority emergencies." << endl;
+return -1;
+}
+EmergencyCase topCase = priorityEmergencyQueue.top();
+priorityEmergencyQueue.pop();
+cout << "Handling patient " << topCase.getPatientId()
+<< " with severity " << topCase.getSeverity() << endl;
+return topCase.getPatientId();
+}
+
+
+// =====================================================
+// CARE DELEGATION (SRS Section 6.6)
+// كل ميثود هنا بتدور على المريض، ولو مش موجود تطبع
+// "Patient not found." وترجع، وبعدين تفوّض للـ Patient
+// =====================================================
+
+void Hospital::dischargePatient(int patientId) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->dischargePatient();
+cout << "Patient discharged successfully." << endl;
+}
+
+void Hospital::requestPatientTest(int patientId, string testName) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->requestTest(testName);
+cout << "Test requested successfully." << endl;
+}
+
+void Hospital::performPatientTest(int patientId) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+string result = p->performTest();
+cout << "Test result/action: " << result << endl;
+}
+
+void Hospital::displayPatientTests(int patientId) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->displayPendingTests();
+}
+
+void Hospital::prescribeMedicine(int patientId, string medicine) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->addPrescription(medicine);
+cout << "Medicine prescribed successfully." << endl;
+}
+
+void Hospital::displayPrescriptions(int patientId) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->displayPrescriptions();
+}
+
+void Hospital::displayPatientBill(int patientId) {
+Patient* p = findPatient(patientId);
+if (p == nullptr) {
+cout << "Patient not found." << endl;
+return;
+}
+p->displayBill();
+}
 
 // ========== MAIN PROGRAM ========== //
 int main()
