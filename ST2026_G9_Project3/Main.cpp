@@ -553,8 +553,22 @@ public:
 	// Room Availability
 	// ===================================================== //
 
-	bool isRoomAvailable(
-		RoomType type);
+	bool isRoomAvailable(RoomType type)
+	{
+		switch (type)
+		{
+		case GENERAL_WARD:
+			return generalRooms > 0;
+		case ICU:
+			return icuRooms > 0;
+		case PRIVATE_ROOM:
+			return privateRooms > 0;
+		case SEMI_PRIVATE:
+			return semiPrivateRooms > 0;
+		default:
+			return false;
+		}
+	}
 
 	// =====================================================
 	// NEW FEATURE 14
