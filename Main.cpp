@@ -117,10 +117,33 @@ public:
 		cout << "Medical record added for " << name << endl;
 	};
 
-	void requestTest(string testName);
-	string performTest();
+	void requestTest(string testName)
+    {
+        testQueue.push(testName);
+        medicalHistory.push("Test requested: " + testName);
+    }
+	string performTest()
+    {
+        if (testQueue.empty())
+        {
+            return "No tests pending";
+        }
+        string testName = testQueue.front();
+        testQueue.pop();
+        bill += 300.0;
+        medicalHistory.push("Test performed: " + testName);
+        return testName;
+    }
 
-	void displayHistory();
+	void displayHistory()
+    {
+        stack<string> temp = medicalHistory;
+        while (!temp.empty())
+        {
+            cout << "- " << temp.top() << endl;
+            temp.pop();
+        }
+    }
 
 	int getId()
 	{
@@ -139,11 +162,35 @@ public:
 	// ========== NEW FEATURES ========== //
 
 	// Medical Tests
-	void displayPendingTests();
+	void displayPendingTests()
+    {
+        queue<string> temp = testQueue;
+        while (!temp.empty())
+        {
+            cout << "- " << temp.front() << endl;
+            temp.pop();
+        }
+    }
 
 	// Prescriptions
-	void addPrescription(string medicine);
-	void displayPrescriptions();
+	void addPrescription(string medicine)
+    {
+        prescriptions.push_back(medicine);
+        bill += 100.0;
+        medicalHistory.push("Prescription added: " + medicine);
+    }
+	void displayPrescriptions()
+    {
+        if (prescriptions.empty())
+        {
+            cout << "No prescriptions." << endl;
+            return;
+        }
+        for (size_t i = 0; i < prescriptions.size(); ++i)
+        {
+            cout << "- " << prescriptions[i] << endl;
+        }
+    }
 
 	// Billing
 	void addBill(double amount)
