@@ -90,16 +90,17 @@ public:
 	// ========== ORIGINAL FEATURES ========== //
 
 	void admitPatient(RoomType type)
-	{
-		if (isAdmitted)
-		{
-			cout << "patient" << name << "is already admitted" << endl;
-			return;
-		}
-		isAdmitted = true;
-		roomType = type;
-		cout << "patient" << name << " admitted to room type " << type << endl;
-	};
+    {
+        if (isAdmitted)
+       {
+            cout << "Patient " << name << " is already admitted." << endl;
+          return;
+       }
+       isAdmitted = true;
+       roomType = type;
+       cout << "Patient " << name << " admitted to room type " << type << endl;
+    };
+
 	void dischargePatient()
 	{
 		if (!isAdmitted)
@@ -118,22 +119,23 @@ public:
 	};
 
 	void requestTest(string testName)
+   {
+    testQueue.push(testName);
+    medicalHistory.push("Test requested: " + testName);
+ }
+ 
+   string performTest()
     {
-        testQueue.push(testName);
-        medicalHistory.push("Test requested: " + testName);
-    }
-	string performTest()
-    {
-        if (testQueue.empty())
-        {
-            return "No tests pending";
-        }
-        string testName = testQueue.front();
-        testQueue.pop();
-        bill += 300.0;
-        medicalHistory.push("Test performed: " + testName);
-        return testName;
-    }
+       if (testQueue.empty())
+     {
+         return "No tests pending";
+     }
+       string testName = testQueue.front();
+       testQueue.pop();
+       bill += 300.0;
+       medicalHistory.push("Test performed: " + testName);
+       return testName;
+   }
 
 	void displayHistory()
     {
@@ -921,12 +923,20 @@ return topCase.getPatientId();
 // =====================================================
 
 void Hospital::dischargePatient(int patientId) {
-Patient* p = findPatient(patientId);
-if (p == nullptr) {
-cout << "Patient not found." << endl;
-return;
-}
-p->dischargePatient();
+    Patient* p = findPatient(patientId);
+    if (p == nullptr) {
+        cout << "Patient not found." << endl;
+        return;
+    }
+    if (p->getAdmissionStatus()) {
+        switch (p->getRoomType()) {
+            case GENERAL_WARD:  generalRooms++; break;
+            case ICU:           icuRooms++; break;
+            case PRIVATE_ROOM:  privateRooms++; break;
+            case SEMI_PRIVATE:  semiPrivateRooms++; break;
+        }
+    }
+    p->dischargePatient();
 cout << "Patient discharged successfully." << endl;
 }
 
