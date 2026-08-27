@@ -699,6 +699,172 @@ public:
 	// Hospital Statistics
 	// ===================================================== //
 
+	void displayStatistics();
+
+// =====================================================
+// SEARCH + ROOMS + SYSTEM REPORTING
+// =====================================================
+
+};
+
+void Hospital::searchPatientByName(string name)
+{
+	bool found = false;
+
+	for (int i = 0; i < patients.size(); i++)
+	{
+		if (patients[i].getName() == name)
+		{
+			cout << "Patient Found:" << endl;
+			cout << "ID: " << patients[i].getId() << endl;
+			cout << "Name: " << patients[i].getName() << endl;
+			cout << "Age: " << patients[i].getAge() << endl;
+			cout << "Contact: " << patients[i].getContact() << endl;
+			found = true;
+		}
+	}
+
+	if (!found)
+	{
+		cout << "Patient not found." << endl;
+	}
+}
+
+void Hospital::displayPatientInfo(int patientId)
+{
+	Patient *p = findPatient(patientId);
+
+	if (p == nullptr)
+	{
+		cout << "Patient with ID " << patientId << " not found." << endl;
+		return;
+	}
+
+	cout << "Patient Information:" << endl;
+	cout << "ID: " << p->getId() << endl;
+	cout << "Name: " << p->getName() << endl;
+	cout << "Admission Status: ";
+
+	if (p->getAdmissionStatus())
+		cout << "Admitted" << endl;
+	else
+		cout << "Not Admitted" << endl;
+
+	cout << "Medical History for " << p->getName()
+		 << " (ID: " << p->getId() << "):" << endl;
+
+	p->displayHistory();
+}
+
+void Hospital::displayDoctorInfo(int doctorId)
+{
+	Doctor *d = findDoctor(doctorId);
+
+	if (d == nullptr)
+	{
+		cout << "Doctor with ID " << doctorId << " not found." << endl;
+		return;
+	}
+
+	cout << "Doctor Information:" << endl;
+	cout << "ID: " << d->getId() << endl;
+	cout << "Name: " << d->getName() << endl;
+	cout << "Department: " << d->getDepartment() << endl;
+}
+
+void Hospital::displayRoomStatus()
+{
+	cout << "========== ROOM STATUS ==========" << endl;
+	cout << "General Ward: " << generalRooms << endl;
+	cout << "ICU: " << icuRooms << endl;
+	cout << "Private Rooms: " << privateRooms << endl;
+	cout << "Semi Private Rooms: " << semiPrivateRooms << endl;
+	cout << "=================================" << endl;
+}
+
+void Hospital::displayAllPatients()
+{
+	cout << "========== ALL PATIENTS ==========" << endl;
+
+	if (patients.empty())
+	{
+		cout << "No patients registered." << endl;
+		return;
+	}
+
+	for (int i = 0; i < patients.size(); i++)
+	{
+		cout << "ID: " << patients[i].getId()
+			 << " | Name: " << patients[i].getName()
+			 << " | Age: " << patients[i].getAge()
+			 << " | Status: ";
+
+		if (patients[i].getAdmissionStatus())
+			cout << "Admitted";
+		else
+			cout << "Not Admitted";
+
+		cout << endl;
+	}
+}
+
+void Hospital::displayAllDoctors()
+{
+	cout << "========== ALL DOCTORS ==========" << endl;
+
+	if (doctors.empty())
+	{
+		cout << "No doctors registered." << endl;
+		return;
+	}
+
+	for (int i = 0; i < doctors.size(); i++)
+	{
+		cout << "ID: " << doctors[i].getId()
+			 << " | Name: " << doctors[i].getName()
+			 << " | Department: " << doctors[i].getDepartment()
+			 << " | Appointments: "
+			 << doctors[i].getAppointmentCount() << endl;
+	}
+}
+
+void Hospital::displayDoctorAppointments(int doctorId)
+{
+	Doctor *d = findDoctor(doctorId);
+
+	if (d == nullptr)
+	{
+		cout << "Doctor with ID " << doctorId << " not found." << endl;
+		return;
+	}
+
+	cout << "Appointments for Dr. " << d->getName() << ":" << endl;
+	d->displayAppointments();
+}
+
+void Hospital::displayStatistics()
+{
+	int admittedPatients = 0;
+	double totalBills = 0.0;
+
+	for (int i = 0; i < patients.size(); i++)
+	{
+		if (patients[i].getAdmissionStatus())
+			admittedPatients++;
+
+		totalBills += patients[i].getBill();
+	}
+
+	cout << "========== HOSPITAL STATISTICS ==========" << endl;
+	cout << "Total Patients: " << patients.size() << endl;
+	cout << "Total Doctors: " << doctors.size() << endl;
+	cout << "Admitted Patients: " << admittedPatients << endl;
+	cout << "Waiting Emergencies: " << emergencyQueue.size() << endl;
+	cout << "Priority Emergencies: " << priorityEmergencyQueue.size() << endl;
+	cout << "Total Generated Bills: $" << totalBills << endl;
+	cout << "=========================================" << endl;
+}
+
 // =====================================================
 // EMERGENCY MANAGEMENT (SRS Section 6.5)
 // =====================================================
